@@ -43,6 +43,8 @@ class ServiceProvider extends BaseServiceProvider {
         	__DIR__ . '/../../config/settings.php' => config_path('laravel-menu/settings.php'),
         	__DIR__ . '/../../config/views.php'    => config_path('laravel-menu/views.php'),
 		]);
+
+		$this->registerMenus();
 	}
 
 	/**
@@ -54,5 +56,19 @@ class ServiceProvider extends BaseServiceProvider {
 	{
 		return array('menu');
 	}
+
+        // This method can be overridden in a child class
+        public function registerMenus()
+        {
+            // Load the app menus if they're in routes/menus.php (Laravel 5.3)
+            if (file_exists($file = $this->app['path.base'] . '/routes/menus.php')) {
+                require $file;
+            }
+
+            // Load the app menus if they're in app/Http/menus.php (Laravel 5.0-5.2)
+            elseif (file_exists($file = $this->app['path'] . '/Http/menus.php')) {
+                require $file;
+            }
+        }
 
 }
